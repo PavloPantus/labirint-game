@@ -1,0 +1,70 @@
+{
+  "name": "smartum-game",
+  "version": "0.1.0",
+  "private": true,
+  "homepage": ".",
+  "dependencies": {
+    "@types/node": "^12.12.26",
+    "@types/react": "^16.9.19",
+    "@types/react-dom": "^16.9.5",
+    "@types/react-transition-group": "^4.2.4",
+    "@types/styled-components": "^5.0.1",
+    "classnames": "^2.2.6",
+    "gh-pages": "^2.2.0",
+    "node-sass": "^4.13.0",
+    "react": "^16.8.6",
+    "react-dom": "^16.8.6",
+    "react-scripts": "3.0.1",
+    "react-transition-group": "^4.3.0",
+    "styled-components": "^5.0.1",
+    "typescript": "^3.7.5"
+  },
+  "devDependencies": {
+    "@mate-academy/eslint-config": "*",
+    "@mate-academy/stylelint-config": "*",
+    "eslint": "^5.3.0",
+    "eslint-config-airbnb": "^17.1.1",
+    "eslint-plugin-import": "^2.17.3",
+    "eslint-plugin-jsx-a11y": "^6.2.1",
+    "eslint-plugin-node": "^8.0.1",
+    "eslint-plugin-react": "^7.13.0",
+    "stylelint": "^10.0.0"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build",
+    "lint": "eslint --ext .jsx,.js ./src/ --fix"
+  },
+  "eslintConfig": {
+    "extends": "react-app"
+  },
+  "lint-staged": {
+    "linters": {
+      "*.css": [
+        "stylelint",
+        "git add"
+      ],
+      "*.js": [
+        "eslint",
+        "git add"
+      ]
+    },
+    "ignore": []
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  }
+}
