@@ -40,7 +40,18 @@ const StepsPanel: React.FC <StepsPanelProps> = (
         }
 
         const getNextStep = (previousSteps: Array<string>):string => {
-           return 'top'
+          const possibleSteps: Array<string> = ['top', 'right', 'bottom', 'left'];
+
+          const getRandomIntInclusive = (min: number, max: number): number => {
+            min = Math.ceil(min);
+            max = Math.floor(max);
+            return Math.floor(Math.random() * (max - min + 1)) + min; //Включаючи мінімум та максимум
+          }
+
+           if(previousSteps.length === 0){
+             return possibleSteps[getRandomIntInclusive(0, 3)]
+           }
+          return possibleSteps[getRandomIntInclusive(0, 3)]
         }
 
         setSteps((steps)=>[...steps, getNextStep(steps)]);
