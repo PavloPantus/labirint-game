@@ -12,14 +12,16 @@ const StyledStepPanel = styled.div`
 
 type StepsPanelProps = {
   gameStarted: boolean,
-  setGameStarted: (gameStarted: boolean)=>void,
+  newGameStarted: boolean,
+  setNewGameStarted: (newGameStarted: boolean)=>void,
   setStartSquare: (startSquare: number|undefined)=>void,
   setEndSquare: (endSquare: number|undefined)=>void,
 }
 
 const StepsPanel: React.FC <StepsPanelProps> = (
   { gameStarted,
-    setGameStarted,
+    setNewGameStarted,
+    newGameStarted,
     setStartSquare,
     setEndSquare }
 ) => {
@@ -40,6 +42,17 @@ const StepsPanel: React.FC <StepsPanelProps> = (
   const [steps, setSteps] = useState<Istep[]>([]);
   const [nextStep, setNextStep] = useState< number|undefined >(undefined);
 
+
+  useEffect(()=>{
+    if(newGameStarted){
+      setNextStep(undefined);
+      setSteps([]);
+      setStartSquare(undefined);
+      setEndSquare(undefined);
+      setNewGameStarted(false);
+    }
+  },[newGameStarted])
+
   useEffect(() => {
     /* function to ger random int */
     const getRandomIntInclusive = (min: number, max: number): number => {
@@ -49,7 +62,10 @@ const StepsPanel: React.FC <StepsPanelProps> = (
       return Math.floor(Math.random() * (max - min + 1)) + min; // Включаючи мінімум та максимум
     };
 
-    if (gameStarted) {
+
+    if (gameStarted && !newGameStarted && steps.length === 0) {
+
+
       /* get start square on game board */
       const startSquare = getRandomIntInclusive(1, 9);
 
@@ -78,7 +94,7 @@ const StepsPanel: React.FC <StepsPanelProps> = (
             /* check angles of sides on possible steps */
 
             /* left top angle */
-            if (1 === includesValue) {
+            if (includesValue === 1) {
               return {
                 step: possibleSteps.filter(
                   step => step !== 'top' && step !== 'left'
@@ -88,7 +104,7 @@ const StepsPanel: React.FC <StepsPanelProps> = (
             }
 
             /* top right angle */
-            if (3 === includesValue) {
+            if (includesValue === 3) {
               return {
                 step: possibleSteps.filter(
                   step => step !== 'top' && step !== 'right'
@@ -130,7 +146,7 @@ const StepsPanel: React.FC <StepsPanelProps> = (
             }
 
             /* right side */
-            if (arrayOFSquares.map(arr => arr[arr.length-1]).includes(includesValue)) {
+            if (arrayOFSquares.map(arr => arr[arr.length - 1]).includes(includesValue)) {
               return {
                 step: possibleSteps.filter(
                   step => step !== 'right'
@@ -195,7 +211,7 @@ const StepsPanel: React.FC <StepsPanelProps> = (
 
           return getStepHelper(startedSquare);
         };
-
+        console.log(steps)
         setSteps((steps) => {
           if (steps.length === 11) {
             clearInterval(timerSteps);
@@ -210,6 +226,7 @@ const StepsPanel: React.FC <StepsPanelProps> = (
       setTimeout(() => {
         let counter = 0;
         const timerNextStep = setInterval(() => {
+          console.log(counter)
           if (counter === 10) {
             clearInterval(timerNextStep);
           }
@@ -218,7 +235,7 @@ const StepsPanel: React.FC <StepsPanelProps> = (
         }, 1000);
       }, 1000);
     }
-  }, [gameStarted]);
+  }, [gameStarted, newGameStarted, steps]);
 
   return (
     <StyledStepPanel>

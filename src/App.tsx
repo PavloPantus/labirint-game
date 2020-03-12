@@ -72,6 +72,7 @@ const App: React.FC = () => {
   const [gameStarted, setGameStarted] = useState<boolean>(false);
   const [startSquare, setStartSquare] = useState<undefined|number>(undefined);
   const [endSquare, setEndSquare] = useState<undefined|number>(undefined);
+  const [newGameStarted, setNewGameStarted] = useState(false);
 
   return (
     <StyledApp>
@@ -97,6 +98,8 @@ const App: React.FC = () => {
 
         >
           <GameBoard
+            setGameStarted={setGameStarted}
+            setNewGameStarted={setNewGameStarted}
             startSquare={startSquare}
             endSquare={endSquare}
           />
@@ -106,7 +109,8 @@ const App: React.FC = () => {
       <div className="steps-panel-container">
         <StepsPanel
           gameStarted={gameStarted}
-          setGameStarted={setGameStarted}
+          newGameStarted={newGameStarted}
+          setNewGameStarted={setNewGameStarted}
           setStartSquare={setStartSquare}
           setEndSquare={setEndSquare}
         />
