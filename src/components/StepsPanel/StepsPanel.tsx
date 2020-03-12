@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import styled from 'styled-components';
 import GameStep from '../Game-Step/Game-Step';
 
@@ -13,14 +13,16 @@ const StyledStepPanel = styled.div`
 type StepsPanelProps = {
   gameStarted: boolean,
   setGameStarted: (gameStarted: boolean)=>void,
+  setStartSquare: (startSquare: number|undefined)=>void,
+  setEndSquare: (endSquare: number|undefined)=>void,
 }
 
 const StepsPanel: React.FC <StepsPanelProps> = (
-  {gameStarted,
+  { gameStarted,
     setGameStarted,
-  }
-  ) => {
-
+    setStartSquare,
+    setEndSquare }
+) => {
   const arrayOfSteps: Array<number | undefined> = useMemo(() => {
     const array: Array<number | undefined> = [];
 
@@ -30,51 +32,206 @@ const StepsPanel: React.FC <StepsPanelProps> = (
     return array;
   }, []);
 
-  const [steps, setSteps] = useState<string[]>([]);
+  type Istep = {
+    step: string,
+    stepNumber: number,
+  }
+
+  const [steps, setSteps] = useState<Istep[]>([]);
   const [nextStep, setNextStep] = useState< number|undefined >(undefined);
-  useEffect(()=>{
-    if(gameStarted){
-      let timerSteps =  setInterval(()=>{
-        if(steps.length ===  10){
-          clearInterval(timerSteps);
+
+  useEffect(() => {
+    /* function to ger random int */
+    const getRandomIntInclusive = (min: number, max: number): number => {
+      min = Math.ceil(min);
+      max = Math.floor(max);
+
+      return Math.floor(Math.random() * (max - min + 1)) + min; // Включаючи мінімум та максимум
+    };
+
+    if (gameStarted) {
+      /* get start square on game board */
+      const startSquare = getRandomIntInclusive(1, 9);
+
+      /* set start square on game board */
+      setStartSquare(startSquare);
+
+      const timerSteps = setInterval(() => {
+        /* possible steps array */
+        const possibleSteps: Array<string> = ['top', 'right', 'bottom', 'left'];
+
+        /* array represents gameboard swqures */
+        const arrayOFSquares: number[][] = [];
+
+        for (let i = 1; i <= 9; i += 3) {
+          const subArr = [];
+
+          for (let a = i; a < i + 3; a += 1) {
+            subArr.push(a);
+          }
+          arrayOFSquares.push(subArr);
         }
 
-        const getNextStep = (previousSteps: Array<string>):string => {
-          const possibleSteps: Array<string> = ['top', 'right', 'bottom', 'left'];
+        /* function gets next step */
+        const getNextStep = (previousSteps: Array<Istep>, startedSquare: number):Istep => {
+          const getStepHelper = (includesValue: number):Istep => {
+            /* check angles of sides on possible steps */
 
-          const getRandomIntInclusive = (min: number, max: number): number => {
-            min = Math.ceil(min);
-            max = Math.floor(max);
-            return Math.floor(Math.random() * (max - min + 1)) + min; //Включаючи мінімум та максимум
+            /* left top angle */
+            if (1 === includesValue) {
+              return {
+                step: possibleSteps.filter(
+                  step => step !== 'top' && step !== 'left'
+                )[getRandomIntInclusive(0, 1)],
+                stepNumber: includesValue,
+              };
+            }
+
+            /* top right angle */
+            if (3 === includesValue) {
+              return {
+                step: possibleSteps.filter(
+                  step => step !== 'top' && step !== 'right'
+                )[getRandomIntInclusive(0, 1)],
+                stepNumber: includesValue,
+              };
+            }
+
+            /* bottom right angle */
+            if (includesValue === 9) {
+              return {
+                step: possibleSteps.filter(
+                  step => step !== 'bottom' && step !== 'right'
+                )[getRandomIntInclusive(0, 1)],
+                stepNumber: includesValue,
+              };
+            }
+
+            /* bottom left angle */
+            if (includesValue === 7) {
+              return {
+                step: possibleSteps.filter(
+                  step => step !== 'bottom' && step !== 'left'
+                )[getRandomIntInclusive(0, 1)],
+                stepNumber: includesValue,
+              };
+            }
+
+            /* check all sides */
+
+            /* top side */
+            if (arrayOFSquares[0].includes(includesValue)) {
+              return {
+                step: possibleSteps.filter(
+                  step => step !== 'top'
+                )[getRandomIntInclusive(0, 2)],
+                stepNumber: includesValue,
+              };
+            }
+
+            /* right side */
+            if (arrayOFSquares.map(arr => arr[arr.length-1]).includes(includesValue)) {
+              return {
+                step: possibleSteps.filter(
+                  step => step !== 'right'
+                )[getRandomIntInclusive(0, 2)],
+                stepNumber: includesValue,
+              };
+            }
+
+            /* bottom side */
+            if (arrayOFSquares[arrayOFSquares.length - 1].includes(includesValue)) {
+              return {
+                step: possibleSteps.filter(
+                  step => step !== 'bottom'
+                )[getRandomIntInclusive(0, 2)],
+                stepNumber: includesValue,
+              };
+            }
+
+            /* left side */
+            if (arrayOFSquares.map(arr => arr[0]).includes(includesValue)) {
+              return {
+                step: possibleSteps.filter(
+                  step => step !== 'left'
+                )[getRandomIntInclusive(0, 2)],
+                stepNumber: includesValue,
+              };
+            }
+
+            return {
+              step: possibleSteps[getRandomIntInclusive(0, 3)],
+              stepNumber: includesValue,
+            };
+          };
+
+          if (previousSteps.length > 0) {
+            const previousNumber = previousSteps[previousSteps.length - 1].stepNumber;
+
+            const getNewNumber = (): number => {
+              switch (previousSteps[previousSteps.length - 1].step) {
+                case 'top': {
+                  return previousNumber - 3;
+                }
+
+                case 'bottom': {
+                  return previousNumber + 3;
+                }
+
+                case 'right': {
+                  return previousNumber + 1;
+                }
+
+                case 'left': {
+                  return previousNumber - 1;
+                }
+              }
+
+              return 1;
+            };
+
+            return getStepHelper(getNewNumber());
           }
 
-           if(previousSteps.length === 0){
-             return possibleSteps[getRandomIntInclusive(0, 3)]
-           }
-          return possibleSteps[getRandomIntInclusive(0, 3)]
-        }
+          return getStepHelper(startedSquare);
+        };
 
-        setSteps((steps)=>[...steps, getNextStep(steps)]);
-      },1000);
-      setTimeout(()=>{
+        setSteps((steps) => {
+          if (steps.length === 11) {
+            clearInterval(timerSteps);
+            console.log(steps);
+            setEndSquare(steps[steps.length - 1].stepNumber);
+          }
+
+          return [...steps, getNextStep(steps, startSquare)];
+        });
+      }, 1000);
+
+      setTimeout(() => {
         let counter = 0;
-        let timerNextStep =  setInterval(()=>{
-          if(counter ===  10){
+        const timerNextStep = setInterval(() => {
+          if (counter === 10) {
             clearInterval(timerNextStep);
           }
           setNextStep(counter);
-          counter += 1
-        },1000)
-      },1000)
+          counter += 1;
+        }, 1000);
+      }, 1000);
     }
-  },[gameStarted])
+  }, [gameStarted]);
 
   return (
     <StyledStepPanel>
       {
         arrayOfSteps
           .map(
-            (step, i) => <GameStep key={i} nextStep={nextStep===i} stepDirection={steps[i]} />
+            (step, i) => (
+              <GameStep
+                key={i}
+                nextStep={nextStep === i}
+                stepDirection={steps[i] ? steps[i].step : ''}
+              />
+            )
           )
       }
     </StyledStepPanel>

@@ -1,9 +1,9 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import './App.scss';
 import styled from 'styled-components';
-import GameBoard from "./components/GameBoard/GameBoard";
-import StepsPanel from "./components/StepsPanel/StepsPanel";
-import { CSSTransition } from "react-transition-group";
+import { CSSTransition } from 'react-transition-group';
+import GameBoard from './components/GameBoard/GameBoard';
+import StepsPanel from './components/StepsPanel/StepsPanel';
 
 const StyledApp = styled.section`
   .game-heading {
@@ -66,22 +66,27 @@ const StyledApp = styled.section`
   transform: rotateX(90deg);
   transition: all 2000ms;
 }
-`
+`;
 
 const App: React.FC = () => {
-  const [gameStarted, setGameStarted] = useState(false);
+  const [gameStarted, setGameStarted] = useState<boolean>(false);
+  const [startSquare, setStartSquare] = useState<undefined|number>(undefined);
+  const [endSquare, setEndSquare] = useState<undefined|number>(undefined);
+
   return (
     <StyledApp>
-      <h1 className={'game-heading'}>Лабиринт</h1>
+      <h1 className="game-heading">Лабиринт</h1>
       <div className="game-board-container">
         {
           !gameStarted && (
             <button
-            onClick={()=>{setGameStarted(true)}}
-            className={'game-start-button'}
-          >
-            Играть
-          </button>
+              onClick={() => {
+                setGameStarted(true);
+              }}
+              className="game-start-button"
+            >
+              Играть
+            </button>
           )
         }
         <CSSTransition
@@ -91,16 +96,24 @@ const App: React.FC = () => {
           unmountOnExit
 
         >
-              <GameBoard />
+          <GameBoard
+            startSquare={startSquare}
+            endSquare={endSquare}
+          />
         </CSSTransition>
 
       </div>
-      <div className={'steps-panel-container'}>
-        <StepsPanel gameStarted={gameStarted} setGameStarted={setGameStarted} />
+      <div className="steps-panel-container">
+        <StepsPanel
+          gameStarted={gameStarted}
+          setGameStarted={setGameStarted}
+          setStartSquare={setStartSquare}
+          setEndSquare={setEndSquare}
+        />
       </div>
     </StyledApp>
 
   );
-}
+};
 
 export default App;

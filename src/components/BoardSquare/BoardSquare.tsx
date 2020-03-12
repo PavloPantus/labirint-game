@@ -6,14 +6,23 @@ const StyledBoardSquare = styled.div`
   width: 100%;
   background-color: #c595ff;
   border-radius: 3px;
-`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
 
-const BoardSquare: React.FC = () => {
-
-  return (
-    <StyledBoardSquare>
-    </StyledBoardSquare>
-  );
+interface BoardSquareProps {
+  innerValue?: string,
 }
+
+const BoardSquare: React.FC <BoardSquareProps> = (
+  {
+    innerValue,
+  }
+) => (
+  <StyledBoardSquare>
+    {innerValue}
+  </StyledBoardSquare>
+);
 
 export default BoardSquare;
