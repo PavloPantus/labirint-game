@@ -211,11 +211,9 @@ const StepsPanel: React.FC <StepsPanelProps> = (
 
           return getStepHelper(startedSquare);
         };
-        console.log(steps)
         setSteps((steps) => {
           if (steps.length === 11) {
             clearInterval(timerSteps);
-            console.log(steps);
             setEndSquare(steps[steps.length - 1].stepNumber);
           }
 
@@ -226,7 +224,6 @@ const StepsPanel: React.FC <StepsPanelProps> = (
       setTimeout(() => {
         let counter = 0;
         const timerNextStep = setInterval(() => {
-          console.log(counter)
           if (counter === 10) {
             clearInterval(timerNextStep);
           }
