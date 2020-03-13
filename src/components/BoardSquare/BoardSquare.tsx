@@ -9,8 +9,8 @@ const StyledBoardSquare = styled.div < StyledBoardSquareProps > `
   height: 100%;
   width: 100%;
   background-color: ${
-  (props)=>props.backgroundColor?
-    props.backgroundColor : '#c595ff'
+  props => (props.backgroundColor
+    ? props.backgroundColor : '#c595ff')
 };
   border-radius: 3px;
   display: flex;

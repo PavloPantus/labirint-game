@@ -81,6 +81,7 @@ const App: React.FC = () => {
         {
           !gameStarted && (
             <button
+              type="button"
               onClick={() => {
                 setGameStarted(true);
               }}

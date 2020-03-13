@@ -1,3 +1,4 @@
+/* eslint-disable max-len,no-shadow,react/no-array-index-key */
 import React, { useState, useEffect, useMemo } from 'react';
 import styled from 'styled-components';
 import GameStep from '../Game-Step/Game-Step';
@@ -42,16 +43,15 @@ const StepsPanel: React.FC <StepsPanelProps> = (
   const [steps, setSteps] = useState<Istep[]>([]);
   const [nextStep, setNextStep] = useState< number|undefined >(undefined);
 
-
-  useEffect(()=>{
-    if(newGameStarted){
+  useEffect(() => {
+    if (newGameStarted) {
       setNextStep(undefined);
       setSteps([]);
       setStartSquare(undefined);
       setEndSquare(undefined);
       setNewGameStarted(false);
     }
-  },[newGameStarted])
+  }, [newGameStarted]);
 
   useEffect(() => {
     /* function to ger random int */
@@ -62,10 +62,7 @@ const StepsPanel: React.FC <StepsPanelProps> = (
       return Math.floor(Math.random() * (max - min + 1)) + min; // Включаючи мінімум та максимум
     };
 
-
     if (gameStarted && !newGameStarted && steps.length === 0) {
-
-
       /* get start square on game board */
       const startSquare = getRandomIntInclusive(1, 9);
 
@@ -201,9 +198,9 @@ const StepsPanel: React.FC <StepsPanelProps> = (
                 case 'left': {
                   return previousNumber - 1;
                 }
-              }
 
-              return 1;
+                default: return 1;
+              }
             };
 
             return getStepHelper(getNewNumber());
@@ -211,6 +208,7 @@ const StepsPanel: React.FC <StepsPanelProps> = (
 
           return getStepHelper(startedSquare);
         };
+
         setSteps((steps) => {
           if (steps.length === 11) {
             clearInterval(timerSteps);

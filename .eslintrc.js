@@ -1,4 +1,11 @@
 module.exports = {
+  "settings": {
+    "import/resolver": {
+      "node": {
+        "extensions": [".js", ".jsx", ".ts", ".tsx"]
+      }
+    }
+  },
   extends: ['airbnb', '@mate-academy/eslint-config'],
   env: {
     commonjs: true,
@@ -14,9 +21,19 @@ module.exports = {
     it: false
   },
   rules: {
-    "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx"] }],
+    "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx", ".ts", ".tsx"] }],
     'no-console': 'off',
     "no-param-reassign": 0,
     'react/prop-types': 'off',
+    "import/extensions": [
+      "error",
+      "ignorePackages",
+      {
+        "js": "never",
+        "jsx": "never",
+        "ts": "never",
+        "tsx": "never"
+      }
+    ]
   }
 };

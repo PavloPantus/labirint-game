@@ -1,28 +1,8 @@
+/* eslint-disable no-shadow,no-undef,react/no-array-index-key */
 import React, { useEffect, useState, useMemo } from 'react';
 import styled from 'styled-components';
 import StyledBoardIndicator from '../BoardIndicator/BoardIndicator';
 import BoardSquare from '../BoardSquare/BoardSquare';
-
-interface EventTarget {
-  addEventListener(type: string, listener: EventListenerOrEventListenerObject, useCapture?: boolean): void;
-  dispatchEvent(evt: Event): boolean;
-  removeEventListener(type: string, listener: EventListenerOrEventListenerObject, useCapture?: boolean): void;
-}
-
-interface SyntheticEvent {
-  bubbles: boolean;
-  cancelable: boolean;
-  currentTarget: EventTarget;
-  defaultPrevented: boolean;
-  eventPhase: number;
-  isTrusted: boolean;
-  nativeEvent: Event;
-  preventDefault(): void;
-  stopPropagation(): void;
-  target: EventTarget;
-  timeStamp: Date;
-  type: string;
-}
 
 const StyledGameBoard = styled.div`
   position: relative;
@@ -97,7 +77,10 @@ const GameBoard: React.FC <GameBoardProps> = (
     setGameStarted,
   }
 ) => {
-  const [playerclickedIndex, setplayerclickedIndex] = useState< number | undefined >(undefined);
+  const [
+    playerclickedIndex,
+    setplayerclickedIndex,
+  ] = useState< number | undefined >(undefined);
   const [askForNewGame, setAskForNewGame] = useState(false);
 
   useEffect(() => {
@@ -121,6 +104,7 @@ const GameBoard: React.FC <GameBoardProps> = (
         askForNewGame && (
           <div className="start-new-game-container">
             <button
+              type="button"
               className="start-new-game-button"
               onClick={() => {
                 setplayerclickedIndex(undefined);
@@ -131,12 +115,13 @@ const GameBoard: React.FC <GameBoardProps> = (
               Start new game
             </button>
             <button
+              type="button"
               className="start-new-game-button"
               onClick={() => {
                 setplayerclickedIndex(undefined);
                 setAskForNewGame(false);
                 setGameStarted(false);
-                setNewGameStarted(true)
+                setNewGameStarted(true);
               }}
             >
               exit
@@ -151,7 +136,11 @@ const GameBoard: React.FC <GameBoardProps> = (
           ['A', 'B', 'C']
             .map(
               item => (
-                <StyledBoardIndicator key={item} height="20px" indicateOn={item} />
+                <StyledBoardIndicator
+                  key={item}
+                  height="20px"
+                  indicateOn={item}
+                />
               )
             )
         }
@@ -161,7 +150,13 @@ const GameBoard: React.FC <GameBoardProps> = (
           {
             [1, 2, 3]
               .map(
-                item => <StyledBoardIndicator key={item} height="100%" indicateOn={item} />
+                item => (
+                  <StyledBoardIndicator
+                    key={item}
+                    height="100%"
+                    indicateOn={item}
+                  />
+                )
               )
           }
 
@@ -183,15 +178,24 @@ const GameBoard: React.FC <GameBoardProps> = (
                     }}
 
                     backgroundColor={
-                      playerclickedIndex === endSquare
-                      && playerclickedIndex === i + 1
-                        ? 'green'
-                        : playerclickedIndex === i + 1 ? 'red' : ''
+                      ((): string => {
+                        if (playerclickedIndex === endSquare
+                          && playerclickedIndex === i + 1) {
+                          return 'green';
+                        }
+
+                        if (playerclickedIndex === i + 1) {
+                          return 'red';
+                        }
+
+                        return '';
+                      })()
                     }
 
                     innerValue={
-                      (() => {
-                        if (i + 1 === startSquare && i + 1 === endSquare && playerclickedIndex) {
+                      ((): string => {
+                        if (i + 1 === startSquare
+                          && i + 1 === endSquare && playerclickedIndex) {
                           return 'START END';
                         }
 
@@ -202,6 +206,8 @@ const GameBoard: React.FC <GameBoardProps> = (
                         if (i + 1 === endSquare && playerclickedIndex) {
                           return 'END';
                         }
+
+                        return '';
                       })()
                     }
                   />
